@@ -1,0 +1,127 @@
+{
+  "id": "REST_LIMITS_DGCA",
+  "title": "DGCA CAR – Mandatory Rest Requirements",
+  "dgca_reference": "file:///mnt/data/CAR Sec 7 Seriess J Pt 3.pdf",
+  "enabled": true,
+  "version": "1.1",
+  "meta": {
+    "source_files": [
+      "file:///mnt/data/CAR Sec 7 Seriess J Pt 3.pdf",
+      "file:///mnt/data/D7J-J4(R1_Jan2023).pdf",
+      "file:///mnt/data/D7J-J1(Issue4).pdf"
+    ],
+    "generated_by": "handcrafted v1.1",
+    "notes": "Canonical rest rule configuration used by the DGCA engine. Use top-level structured fields for machine consumption."
+  },
+  "rest_rules": {
+    "defaults": {
+      "min_rest_before_fdp_hours": 10,
+      "min_rest_other_duties_hours": 10
+    },
+    "time_zone_overrides": {
+      "crossing_more_than_3_up_to_7_tz_hours": 12,
+      "crossing_more_than_7_tz_hours": 14
+    },
+    "rest_after_long_fdp": {
+      "threshold_fdp_hours": 10,
+      "min_rest_if_prev_fdp_over_threshold_hours": 12,
+      "use_previous_duty_if_longer": true
+    },
+    "wocl_handling": {
+      "wocl_local_start_hour": 2,
+      "wocl_local_end_hour": 5,
+      "start_in_wocl_max_reduction_minutes": 120,
+      "end_or_encompass_reduction_fraction": 0.5,
+      "add_encroachment_minutes_to_rest": true
+    },
+    "augmented_crew": {
+      "enabled": true,
+      "min_rest_hours_for_augmented": 14,
+      "prefer_operator_permissive_when_requested": true
+    },
+    "positioning": {
+      "positioning_requires_full_rest_before_next_fdp": true,
+      "count_positioning_as_duty_if_minutes_over": 30,
+      "count_as_duty_default": false
+    },
+    "split_duty": {
+      "apply_extension_to_rest": true,
+      "extension_minutes_factor": 0.5,
+      "extension_break_min_threshold_minutes": 3,
+      "extension_break_max_threshold_minutes": 600
+    },
+    "transport_time_handling": {
+      "transport_exclusion_threshold_minutes": 30,
+      "if_transport_more_than_threshold_add_to_rest_multiplier": 2
+    },
+    "unforeseen_extensions": {
+      "fdp_extension_up_to_1h_rest_increment_hours": 2,
+      "fdp_extension_above_1h_rest_increment_hours": 4
+    }
+  },
+  "logic": {
+    "type": "rest",
+    "rules": [
+      {
+        "id": "REST_MIN_BEFORE_FDP",
+        "description": "Minimum rest before any FDP must be >= defaults.min_rest_before_fdp_hours or equal to preceding duty whichever is greater.",
+        "condition": {
+          "min_rest_hours_required": "rest_rules.defaults.min_rest_before_fdp_hours"
+        },
+        "effect": {
+          "violation_if_rest_less_than_required": true
+        }
+      },
+      {
+        "id": "REST_AFTER_LONG_FDP",
+        "description": "If previous FDP exceeded rest_rules.rest_after_long_fdp.threshold_fdp_hours, required rest must be previous duty length or rest_rules.rest_after_long_fdp.min_rest_if_prev_fdp_over_threshold_hours.",
+        "condition": {
+          "previous_duty_minutes_over": "rest_rules.rest_after_long_fdp.threshold_fdp_hours * 60"
+        },
+        "effect": {
+          "rest_required_equals_previous_duty_or_minimum": "rest_rules.rest_after_long_fdp.min_rest_if_prev_fdp_over_threshold_hours"
+        }
+      },
+      {
+        "id": "REST_AFTER_WOCL",
+        "description": "If FDP encroaches WOCL, rest must be adjusted according to wocl_handling.",
+        "condition": {
+          "wocl_encroachment_minutes": "payload.context.wocl_encroachment_minutes"
+        },
+        "effect": {
+          "add_encroachment_to_rest": "rest_rules.wocl_handling.add_encroachment_minutes_to_rest"
+        }
+      },
+      {
+        "id": "REST_AFTER_AUGMENTED_FDP",
+        "description": "Augmented crew duty (3 or more crew) must have minimum rest from rest_rules.augmented_crew.min_rest_hours_for_augmented unless operator sets higher.",
+        "condition": {
+          "crew_augmented": true
+        },
+        "effect": {
+          "min_rest_hours": "rest_rules.augmented_crew.min_rest_hours_for_augmented"
+        }
+      },
+      {
+        "id": "REST_AFTER_POSITIONING",
+        "description": "When positioning precedes FDP and positioning rules require it, rest must still meet full mandatory rest irrespective of positioning duration.",
+        "condition": {
+          "positioning_precedes_fdp": true
+        },
+        "effect": {
+          "no_rest_reduction": true
+        }
+      },
+      {
+        "id": "REST_MAX_FDP_RECOVERY",
+        "description": "If FDP was extended by split duty, rest must meet baseline + extension used (split_duty config).",
+        "condition": {
+          "split_duty_extension_minutes": "payload.context.split_duty_extension_minutes"
+        },
+        "effect": {
+          "add_split_extension_to_rest": true
+        }
+      }
+    ]
+  }
+}

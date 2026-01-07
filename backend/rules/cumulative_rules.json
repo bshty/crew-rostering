@@ -1,0 +1,55 @@
+{
+  "id": "CUM_LIMITS",
+  "title": "Cumulative Flight & Duty Limits (DGCA CAR - hand-crafted)",
+  "dgca_reference": "file:///mnt/data/CAR Sec 7 Seriess J Pt 3.pdf",
+  "enabled": true,
+  "version": "2.0",
+  "notes": {
+    "summary": "Rolling-window cumulative limits in minutes. Implement as rolling-sum checks over the last N days.",
+    "source_files": [
+      "file:///mnt/data/CAR Sec 7 Seriess J Pt 3.pdf",
+      "file:///mnt/data/D7J-J1(Issue4).pdf"
+    ]
+  },
+  "logic": {
+    "type": "cumulative_windows",
+    "table": [
+      {
+        "id": "flight_7d",
+        "metric": "flight_minutes",
+        "window_days": 7,
+        "max_minutes": 2400
+      },
+      {
+        "id": "flight_28d",
+        "metric": "flight_minutes",
+        "window_days": 28,
+        "max_minutes": 6900
+      },
+      {
+        "id": "flight_90d",
+        "metric": "flight_minutes",
+        "window_days": 90,
+        "max_minutes": 18000
+      },
+      {
+        "id": "flight_365d",
+        "metric": "flight_minutes",
+        "window_days": 365,
+        "max_minutes": 60000
+      },
+      {
+        "id": "duty_7d",
+        "metric": "duty_minutes",
+        "window_days": 7,
+        "max_minutes": 3900
+      },
+      {
+        "id": "duty_28d",
+        "metric": "duty_minutes",
+        "window_days": 28,
+        "max_minutes": 12600
+      }
+    ]
+  }
+}

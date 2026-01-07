@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "id": "POSITIONING",
+    "title": "Positioning / Deadheading Handling (DGCA CAR)",
+    "version": "2.0",
+    "source_files": [
+      "/mnt/data/D7J-J1(Issue4).pdf",
+      "/mnt/data/CAR Sec 7 Seriess J Pt 3.pdf"
+    ],
+    "notes": "Normalized structure for legality engine. DGCA CAR: Positioning always counts as duty; counts toward FDP if immediately preceding flight duty. May count as a landing if minimum rest was not provided after positioning (per CAR Part III Para 12.4)."
+  },
+
+  "positioning_rules": {
+    "count_as_duty": true,
+    "counts_toward_fdp_when_preceding": true,
+    "count_as_landing_if_rest_below_minimum": true,
+
+    "explanations": {
+      "count_as_duty": "CAR Part III Para 12.1, Part IV Para 13.1 — all time spent on positioning counts as duty.",
+      "counts_toward_fdp_when_preceding": "CAR Part III Para 12.2 — positioning immediately before FDP counts as part of FDP.",
+      "count_as_landing_if_rest_below_minimum": "CAR Part III Para 12.4 — positioning counts as a landing if minimum rest was not provided before split-duty extension."
+    },
+
+    "logic": [
+      {
+        "id": "POS_ADD_TO_DUTY",
+        "action": "add_positioning_to_duty",
+        "enabled": true,
+        "explanation": "If payload.context.positioning_minutes exists, add to duty duration before cumulative checks. (DGCA: positioning always counts as duty)"
+      },
+      {
+        "id": "POS_PRECEDES_FDP",
+        "action": "treat_positioning_as_fdp_extension",
+        "enabled": true,
+        "explanation": "If no intervening rest between positioning and FDP, positioning is counted inside FDP. (DGCA Part III Para 12.2)"
+      },
+      {
+        "id": "POS_COUNTS_AS_LANDING",
+        "action": "increment_landing_count_if_rest_insufficient",
+        "enabled": true,
+        "explanation": "If operator uses split duty after positioning without required rest, count positioning as a landing (DGCA Part III Para 12.4)."
+      }
+    ]
+  }
+}

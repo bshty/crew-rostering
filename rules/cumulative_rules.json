@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "id": "CUM_LIMITS",
+    "title": "Cumulative Flight & Duty Limits (DGCA CAR - converted)",
+    "version": "2.0",
+    "source_files": [
+      "/mnt/data/CAR Sec 7 Seriess J Pt 3.pdf",
+      "/mnt/data/D7J-J1(Issue4).pdf"
+    ],
+    "original_minutes": {
+      "flight_7d_minutes": 2400,
+      "flight_28d_minutes": 6900,
+      "flight_90d_minutes": 18000,
+      "flight_365d_minutes": 60000,
+      "duty_7d_minutes": 3900,
+      "duty_28d_minutes": 12600
+    },
+    "notes": "Converted minutes -> hours to match legality engine. Only duty windows present in source preserved (7d, 28d)."
+  },
+
+  "cumulative_limits": {
+    "7_days": {
+      "max_flight_time_hours": 40.0,
+      "max_duty_hours": 65.0
+    },
+    "14_days": {
+      "max_flight_time_hours": 65.0
+    },
+    "28_days": {
+      "max_flight_time_hours": 115.0,
+      "max_duty_hours": 210.0
+    },
+    "90_days": {
+      "max_flight_time_hours": 300.0
+    },
+    "365_days": {
+      "max_flight_time_hours": 1000.0
+    }
+  }
+}

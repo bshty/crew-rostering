@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "id": "STANDBY_RULES",
+    "title": "DGCA CAR – Standby Counting & Rest Requirements (canonical)",
+    "version": "2.0",
+    "source_files": [
+      "/mnt/data/CAR Sec 7 Seriess J Pt 3.pdf",
+      "/mnt/data/D7J-J1(Issue4).pdf",
+      "/mnt/data/D7J-J4(R1_Jan2023).pdf"
+    ],
+    "notes": "Canonical representation of DGCA standby rules for legality engine. Minutes converted into hours where appropriate."
+  },
+
+  "standby_rules": {
+    "standby_max_hours": 12,
+    "airport_standby_max_hours": 8,
+
+    "airport_standby": {
+      "culminates": {
+        "counted_towards": ["flight_duty_period", "cumulative_duty"],
+        "percentage": 100
+      },
+      "does_not_culminate": {
+        "counted_towards": ["cumulative_duty"],
+        "percentage": 100
+      }
+    },
+
+    "home_hotel_rules": {
+      "culminates_within_6_hours": {
+        "counted_towards": [],
+        "percentage": 0,
+        "standby_minutes_max": 360,
+        "explanation": "If standby at home/hotel culminates <6h, none of it counts toward FDP or cumulative duty."
+      },
+      "culminates_after_6_hours": {
+        "counted_towards": ["flight_duty_period"],
+        "percentage": 50,
+        "standby_minutes_min": 360,
+        "explanation": "If home/hotel standby culminates ≥6h, 50% counts toward FDP (CAR Part III Para 11.2.3b)."
+      },
+      "does_not_culminate": {
+        "counted_towards": ["cumulative_duty"],
+        "percentage": 25,
+        "explanation": "If standby at home/hotel does not culminate in duty, 25% counts into cumulative duty (Part III Para 11.2.4)."
+      }
+    },
+
+    "rest_after_standby": {
+      "airport_rest_hours": 12,
+      "home_rest_hours": 8,
+      "explanation": "CAR Part III Para 10.3 and Part I/Part IV equivalents."
+    },
+
+    "special_rules": {
+      "standby_does_not_reduce_rest": true,
+      "no_split_duty_combination_note": "Standby extensions cannot be combined with split duty FDP extensions (CAR)."
+    }
+  }
+}

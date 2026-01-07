@@ -1,0 +1,191 @@
+{
+  "id": "FDP_TABLES_DGCA_V2",
+  "title": "DGCA CAR - Flight Duty Period Tables (Slice A2 - expanded)",
+  "dgca_reference": "file:///mnt/data/CAR Sec 7 Seriess J Pt 3.pdf (and related Part I/IV PDFs)",
+  "version": "2.0",
+  "notes": {
+    "summary": "Expanded hand-crafted FDP tables for two-pilot, single-pilot, cabin and augmented crews. Values are minutes.",
+    "sources": [
+      "file:///mnt/data/D7J-J4(R1_Jan2023).pdf",
+      "file:///mnt/data/CAR Sec 7 Seriess J Pt 3.pdf",
+      "file:///mnt/data/D7J-J1(Issue4).pdf"
+    ]
+  },
+  "logic": {
+    "type": "fdp_tables",
+    "tables": {
+      "two_pilot_standard": {
+        "table_type": "fdp",
+        "crew_type": "two_pilot",
+        "description": "Two-pilot scheduled operations. Rows grouped by flight-time band (hours) and maps landings->max FDP (minutes).",
+        "source": "D7J-J4(R1_Jan2023).pdf Para 6.1",
+        "bands": [
+          {
+            "flight_time_range": "up_to_8_hours",
+            "landings_to_max_fdp_minutes": {
+              "0": 480,
+              "1": 780,
+              "2": 780,
+              "3": 750,
+              "4": 720,
+              "5": 690,
+              "6": 660
+            }
+          },
+          {
+            "flight_time_range": "over_8_to_9_hours",
+            "landings_to_max_fdp_minutes": {
+              "0": 480,
+              "1": 780,
+              "2": 780,
+              "3": 750,
+              "4": 720,
+              "5": 690,
+              "6": 660
+            }
+          },
+          {
+            "flight_time_range": "over_9_to_10_hours",
+            "landings_to_max_fdp_minutes": {
+              "0": 480,
+              "1": 780,
+              "2": 780
+            }
+          },
+          {
+            "notes": "For specific operator schemes the exact mapping may vary; this file contains conservative values."
+          }
+        ]
+      },
+
+      "two_pilot_night_encroachment_examples": {
+        "table_type": "fdp",
+        "crew_type": "two_pilot",
+        "is_encroachment_example": true,
+        "description": "Examples and conservative reduced values when FDP encroaches night duty (WOCL).",
+        "rows": [
+          {
+            "example": "encroach example - FDP that encroaches night duties with 2 landings",
+            "landings": 2,
+            "max_fdp_minutes": 600,
+            "note": "encroach example - Example reduced FDP when night encroachment is considered - used as a test vector."
+          }
+        ]
+      },
+
+      "single_pilot_standard": {
+        "table_type": "fdp",
+        "crew_type": "single_pilot",
+        "description": "Single-pilot operations (Part IV) — conservative numbers. Values in minutes.",
+        "source": "D7J-J4(R1_Jan2023).pdf Para 8.1",
+        "bands": [
+          {
+            "flight_time_range": "up_to_7_hours",
+            "landings_to_max_fdp_minutes": {
+              "0": 510,
+              "1": 510,
+              "2": 510,
+              "3": 510,
+              "4": 510
+            }
+          },
+          {
+            "flight_time_range": "over_7_to_8_hours",
+            "landings_to_max_fdp_minutes": {
+              "0": 510,
+              "1": 570,
+              "2": 660,
+              "3": 660,
+              "4": 660
+            }
+          },
+          {
+            "flight_time_range": "over_8_hours",
+            "landings_to_max_fdp_minutes": {
+              "0": 660,
+              "1": 570,
+              "2": 510,
+              "3": 510,
+              "4": 510
+            }
+          }
+        ]
+      },
+
+       "augmented_crew": {
+        "table_type": "fdp",
+        "crew_type": "augmented",
+        "description": "Augmented crew (3-crew / 4-crew / ULR) tables with rest-facility mapping.",
+        "source": "D7J-J4(R1_Jan2023).pdf Para 7",
+        "rows": [
+          {
+            "crew_category": "3_crew",
+            "crew_type": "augmented",
+            "max_flight_time_hours": 12,
+            "max_fdp_by_rest_facility_minutes": {
+              "bunk": 1020,
+              "isolated_rest_seat": 960,
+              "basic_rest_seat": 900
+            },
+            "max_landings": 2
+          },
+          {
+            "crew_category": "4_crew",
+            "crew_type": "augmented",
+            "max_flight_time_hours": 14,
+            "max_fdp_by_rest_facility_minutes": {
+              "bunk": 1080,
+              "isolated_rest_seat": 1020
+            },
+            "max_landings": 1
+          },
+          {
+            "crew_category": "4_crew_ulr",
+            "crew_type": "augmented",
+            "max_flight_time_hours": 14,
+            "max_fdp_by_rest_facility_minutes": {
+              "ulr_bunk_approved": 1140
+            },
+            "max_landings": 1,
+            "note": "ULR operations require city-pair approval and operator-specific planning."
+          }
+        ]
+      },
+      "part_i_cabin_crew": {
+        "table_type": "fdp",
+        "crew_type": "cabin",
+        "description": "Cabin crew reference values (Part I).",
+        "source": "D7J-J1(Issue4).pdf Part I",
+        "rows": [
+          {
+            "flight_time_range": "up_to_8_hours",
+            "max_fdp_minutes": 720,
+            "max_landings": 6
+          },
+          {
+            "flight_time_range": "over_8_to_11_hours",
+            "max_fdp_minutes": 900,
+            "max_landings": 3
+          },
+          {
+            "flight_time_range": "over_11_to_14_hours",
+            "max_fdp_minutes": 1080,
+            "max_landings": 1
+          },
+          {
+            "flight_time_range": "ulr_above_14_hours",
+            "max_fdp_minutes": 1320,
+            "note": "ULR cabin crew special handling"
+          }
+        ]
+      },
+
+      "wocl_and_notes": {
+        "wocl_definition": "02:00 - 05:59 local/acclimatized time",
+        "reduction_when_start_in_wocl": "reduce by 100% of encroachment up to max 120 minutes",
+        "reduction_when_end_or_encompass_wocl": "reduce by 50% of encroachment",
+        "additional_notes": "Extensions must comply with cumulative windows."
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "POSITIONING",
+  "title": "Positioning / Deadheading Handling (DGCA)",
+  "dgca_reference": "file:///mnt/data/D7J-J1(Issue4).pdf",
+  "enabled": true,
+  "version": "1.1",
+  "notes": {
+    "summary": "Positioning time counts as duty when it immediately precedes an FDP; it is NOT an operating sector by default. Operator may override whether positioning increments landing count via context flag.",
+    "source_files": [
+      "file:///mnt/data/D7J-J1(Issue4).pdf",
+      "file:///mnt/data/CAR Sec 7 Seriess J Pt 3.pdf"
+    ],
+    "reference_note": "Per DGCA guidance: positioning immediately preceding an FDP should be part of the FDP; positioning should not count as an operating sector (i.e. landing) for FDP planning except where operator policy explicitly treats it as such."
+  },
+  "logic": {
+    "type": "expression",
+    "rules": [
+      {
+        "id": "POS_ADD_TO_DUTY",
+        "type": "conditional",
+        "description": "If positioning immediately precedes FDP (no intervening rest) or payload.context.positioning_precedes_fdp is true, add positioning_minutes to duty_minutes before FDP checks.",
+        "condition": {
+          "positioning_minutes_exists": "payload.context.positioning_minutes",
+          "positioning_precedes_fdp": "payload.context.positioning_precedes_fdp"
+        },
+        "effect": {
+          "action": "add_positioning_to_duty",
+          "detail": "Engine should add payload.context.positioning_minutes (int) to payload.duty_minutes prior to FDP evaluation when condition true."
+        }
+      },
+      {
+        "id": "POS_COUNTS_AS_LANDING",
+        "type": "conditional",
+        "description": "By default positioning does NOT count as an operating sector/landing. Only increment landing count when operator explicitly requests via context flag.",
+        "condition": {
+          "positioning_counts_as_landing_flag": "payload.context.positioning_counts_as_landing"
+        },
+        "effect": {
+          "action": "increment_landings_if_flag_set",
+          "detail": "If payload.context.positioning_counts_as_landing is true, engine may increment landing count when positioning is part of the FDP. Default behaviour is to NOT increment landings."
+        }
+      }
+    ]
+  }
+}

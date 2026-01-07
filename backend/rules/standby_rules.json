@@ -1,0 +1,82 @@
+{
+  "id": "STANDBY_RULES",
+  "title": "Standby Counting & Rest (DGCA - hand-crafted)",
+  "dgca_reference": "file:///mnt/data/CAR Sec 7 Seriess J Pt 3.pdf",
+  "enabled": true,
+  "version": "1.0",
+  "notes": {
+    "summary": "Standby rules for counting towards FDP / cumulative windows and rest after standby.",
+    "source_files": [
+      "file:///mnt/data/D7J-J1(Issue4).pdf",
+      "file:///mnt/data/CAR Sec 7 Seriess J Pt 3.pdf"
+    ]
+  },
+  "logic": {
+    "type": "standby",
+    "table": [
+      {
+        "id": "standby_airport_culminates",
+        "condition": {
+          "standby_location": "airport",
+          "culminates_into_flight": true
+        },
+        "effect": {
+          "counted_towards": [
+            "flight_duty_period",
+            "cumulative_duty"
+          ],
+          "percentage": 100
+        }
+      },
+      {
+        "id": "standby_home_short",
+        "condition": {
+          "standby_location": [
+            "home",
+            "hotel"
+          ],
+          "culminates_into_flight": true,
+          "standby_minutes_min": 0,
+          "standby_minutes_max": 359
+        },
+        "effect": {
+          "counted_towards": [],
+          "percentage": 0
+        }
+      },
+      {
+        "id": "standby_home_long",
+        "condition": {
+          "standby_location": [
+            "home",
+            "hotel"
+          ],
+          "culminates_into_flight": true,
+          "standby_minutes_min": 360
+        },
+        "effect": {
+          "counted_towards": [
+            "flight_duty_period"
+          ],
+          "percentage": 50
+        }
+      },
+      {
+        "id": "standby_not_culminate",
+        "condition": {
+          "standby_location": [
+            "home",
+            "hotel"
+          ],
+          "culminates_into_flight": false
+        },
+        "effect": {
+          "counted_towards": [
+            "cumulative_duty"
+          ],
+          "percentage": 25
+        }
+      }
+    ]
+  }
+}

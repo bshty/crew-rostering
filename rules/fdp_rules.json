@@ -1,0 +1,149 @@
+{
+  "meta": {
+    "id": "FDP_TABLES_DGCA_V2",
+    "title": "DGCA CAR - Flight Duty Period Tables (Slice A2 - canonical)",
+    "version": "2.0",
+    "sources": [
+      "/mnt/data/D7J-J4(R1_Jan2023).pdf",
+      "/mnt/data/CAR Sec 7 Seriess J Pt 3.pdf",
+      "/mnt/data/D7J-J1(Issue4).pdf"
+    ],
+    "notes": "Converted to canonical engine format (hours). See individual keys for details."
+  },
+
+  "WOCL": {
+    "default_start": "02:00",
+    "default_end": "06:00",
+    "description": "Window of Circadian Low (home-base/domicile referenced unless otherwise specified)"
+  },
+
+  "two_pilot": {
+    "fdp_table": [
+      {
+        "max_flight_time_hours": 8.0,
+        "max_fdp_hours": 11.00,
+        "max_landings": 6
+      },
+      {
+        "max_flight_time_hours": 8.0,
+        "max_fdp_hours": 11.50,
+        "max_landings": 5
+      },
+      {
+        "max_flight_time_hours": 8.0,
+        "max_fdp_hours": 12.00,
+        "max_landings": 4
+      },
+      {
+        "max_flight_time_hours": 8.0,
+        "max_fdp_hours": 12.50,
+        "max_landings": 3
+      },
+      {
+        "max_flight_time_hours": 9.0,
+        "max_fdp_hours": 13.00,
+        "max_landings": 2
+      },
+      {
+        "max_flight_time_hours": 10.0,
+        "max_fdp_hours": 13.00,
+        "max_landings": 1
+      }
+    ],
+    "notes": "Mapped from CAR two-pilot FDP table variations (conservative rows matching common operator schemes)."
+  },
+
+  "two_pilot_night_encroachment_examples": {
+    "description": "Example vectors for testing WOCL encroachment reductions (kept as test vectors).",
+    "examples": [
+      {
+        "example_id": "tp_encroach_2_landings",
+        "landings": 2,
+        "nominal_max_fdp_hours": 10.0,
+        "test_max_fdp_hours_with_encroachment": 10.0,
+        "note": "Used as a sample/test vector. Actual reduction logic handled in legality engine."
+      }
+    ]
+  },
+
+  "single_pilot": {
+    "fdp_table": [
+      {
+        "max_flight_time_hours": 7.0,
+        "max_fdp_hours": 8.50,
+        "max_landings": 8
+      },
+      {
+        "max_flight_time_hours": 8.0,
+        "max_fdp_hours": 9.50,
+        "max_landings": 6
+      },
+      {
+        "max_flight_time_hours": 8.0,
+        "max_fdp_hours": 11.00,
+        "max_landings": 4
+      }
+    ],
+    "notes": "Single-pilot rows mapped from Part IV conservative values."
+  },
+
+  "augmented": {
+    "3_crew": {
+      "max_flight_time_hours": 12.0,
+      "max_fdp_by_rest_facility_hours": {
+        "bunk": 16.0,
+        "isolated_rest_seat": 15.0,
+        "basic_rest_seat": 14.0
+      },
+      "max_landings": 2
+    },
+    "4_crew": {
+      "max_flight_time_hours": 14.0,
+      "max_fdp_by_rest_facility_hours": {
+        "bunk": 18.0,
+        "isolated_rest_seat": 16.0,
+        "basic_rest_seat": null
+      },
+      "max_landings": 1
+    },
+    "4_crew_ulr": {
+      "max_flight_time_hours": 17.0,
+      "max_fdp_by_rest_facility_hours": {
+        "ulr_bunk_approved": 21.0
+      },
+      "max_landings": 1,
+      "note": "ULR operations require DGCA city-pair approval and operator-specific scheme."
+    }
+  },
+
+  "part_i_cabin_crew": {
+    "description": "Cabin crew reference values (Part I) kept for reference and tests.",
+    "rows": [
+      {
+        "flight_time_range": "up_to_8_hours",
+        "max_fdp_hours": 12.0,
+        "max_landings": 6
+      },
+      {
+        "flight_time_range": "over_8_to_11_hours",
+        "max_fdp_hours": 15.0,
+        "max_landings": 3
+      },
+      {
+        "flight_time_range": "over_11_to_14_hours",
+        "max_fdp_hours": 18.0,
+        "max_landings": 1
+      },
+      {
+        "flight_time_range": "ulr_above_14_hours",
+        "max_fdp_hours": 22.0,
+        "note": "ULR cabin crew special handling"
+      }
+    ]
+  },
+
+  "notes": {
+    "conversion": "Original minute-based values were converted to hours to match the legality engine's expected keys (max_fdp_hours / max_flight_time_hours).",
+    "caveat": "For any site-specific operator scheme or approved FRMS values, place overrides in a separate rules file (e.g., 'operator_overrides.json') so the merge loader can pick them up later."
+  }
+}

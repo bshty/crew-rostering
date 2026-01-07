@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "id": "REST_LIMITS_DGCA",
+    "title": "DGCA CAR – Mandatory Rest Requirements (canonical)",
+    "version": "2.0",
+    "source_files": [
+      "/mnt/data/CAR Sec 7 Seriess J Pt 3.pdf",
+      "/mnt/data/D7J-J4(R1_Jan2023).pdf",
+      "/mnt/data/D7J-J1(Issue4).pdf"
+    ],
+    "notes": "Canonical, engine-friendly mapping of rest rules. Times are hours unless noted. See CAR Section 7 paras for details."
+  },
+
+  "rest_rules": {
+    "defaults": {
+      "min_rest_before_fdp_hours": 12,
+      "min_rest_other_duties_hours": 10,
+      "weekly_rest_hours": 36,
+      "weekly_rest_window_hours": 168
+    },
+
+    "time_zone_overrides": {
+      "crossing_more_than_3_up_to_7_tz_hours": 18,
+      "crossing_more_than_7_tz_hours": 36
+    },
+
+    "previous_duty_handling": {
+      "rule": "preceding_duty_or_minimum",
+      "explanation": "Minimum rest before FDP must be at least as long as the preceding duty period OR the applicable baseline (12h / timezone override), whichever is greater. (CAR Section 7)."
+    },
+
+    "rest_after_long_fdp": {
+      "threshold_fdp_hours": 10,
+      "min_rest_if_prev_fdp_over_threshold_hours": 12,
+      "use_previous_duty_if_longer": true,
+      "explanation": "If previous FDP exceeded threshold (10h), rest must be previous duty length or the fallback minimum (12h) whichever is greater."
+    },
+
+    "wocl_handling": {
+      "wocl_start": "02:00",
+      "wocl_end": "06:00",
+      "add_encroachment_minutes_to_rest": true,
+      "max_encroachment_add_minutes_note": "encroachment is added as minutes; encroachment calculation is done in engine using start/end local dt. See WOCL encroachment rules."
+    },
+
+    "augmented_crew": {
+      "min_rest_hours_for_augmented": 14,
+      "explanation": "Augmented crew planning should ensure minimum rest of 14 hours unless operator scheme defines otherwise."
+    },
+
+    "positioning": {
+      "positioning_requires_full_rest_before_next_fdp": true,
+      "note": "Positioning time counts as duty; positioning followed by FDP still requires the full mandatory rest before next FDP per CAR. Positioning-related special cases (count as landing etc.) are handled by positioning_rules.json."
+    },
+
+    "split_duty": {
+      "apply_extension_to_rest": true,
+      "split_extension_context_key": "payload.context.split_duty_extension_minutes",
+      "explanation": "If FDP was extended by split duty, add extension to ensuing rest per CAR; also if FDP extended by unforeseen extensions, rest shall be pro-rata increased by twice the extension (handled by unforeseen rules)."
+    },
+
+    "ulr": {
+      "post_ulp_return_rest_hours": 120,
+      "after_two_consecutive_ulr_increase_hours": 24
+    },
+
+    "unforeseen_extensions": {
+      "fdp_extension_up_to_1h_rest_increment_hours": 2,
+      "fdp_extension_above_1h_rest_increment_hours": 4,
+      "flight_time_extension_up_to_0_5h_rest_increment_hours": 2,
+      "flight_time_extension_above_0_5h_rest_increment_hours": 4
+    },
+
+    "transport_time_handling": {
+      "transport_exclusion_threshold_minutes": 30,
+      "if_transport_more_than_threshold_add_to_rest_multiplier": 2,
+      "explanation": "Period of transportation is not counted as rest. But if transport >30 minutes, the rest shall increase by twice the time above 30 minutes (CAR)."
+    }
+  }
+}
